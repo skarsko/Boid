@@ -1,4 +1,4 @@
-# Install script for directory: /home/samuel/Desktop/Own Programming/Simulation/Boid
+# Install script for directory: /home/samuelkarsko/Desktop/Own Programming/Boid
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -50,5 +50,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/samuel/Desktop/Own Programming/Simulation/Boid/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/samuelkarsko/Desktop/Own Programming/Boid/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

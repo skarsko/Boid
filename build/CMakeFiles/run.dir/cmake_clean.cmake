@@ -1,6 +1,10 @@
 file(REMOVE_RECURSE
   "CMakeFiles/run.dir/main.cpp.o"
   "CMakeFiles/run.dir/main.cpp.o.d"
+  "CMakeFiles/run.dir/src/boid.cpp.o"
+  "CMakeFiles/run.dir/src/boid.cpp.o.d"
+  "CMakeFiles/run.dir/src/generateBoids.cpp.o"
+  "CMakeFiles/run.dir/src/generateBoids.cpp.o.d"
   "run"
   "run.pdb"
 )
