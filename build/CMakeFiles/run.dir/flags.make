@@ -6,5 +6,5 @@ CXX_DEFINES =
 
 CXX_INCLUDES = -I"/home/samuelkarsko/Desktop/Own Programming/Boid/SDL2Test" -isystem /usr/include/SDL2
 
-CXX_FLAGS = 
+CXX_FLAGS =  -std=c++11 -O3
 
