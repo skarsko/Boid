@@ -5,18 +5,42 @@
 #include <iostream>
 #include <math.h>
 #include <cmath>
+#include <SDL2/SDL_ttf.h>
 #include "src/param.hpp"
 #include "src/boid.hpp"
 #include "src/generateBoids.hpp"
-const int SCREEN_WIDTH = 1280;
-const int SCREEN_HEIGHT = 960;
+const int SCREEN_WIDTH = 1920;
+const int SCREEN_HEIGHT = 1080;
 const int BOID_RADIUS = 5;
+
+//Main-only parameters
+int numBoids = 550;
+double maxSpeed = 6;
+int separationDistance = 50;
+double avoidFactor = 0.00008;
+int alignmentDistance = 100;
+double alignmentFactor = 0.002;
+int cohesionDistance = 200;
+double cohesionFactor = 0.0001;
+double turnFactor = 0.05;
+double margin = 0.1;
+double predatorAvoidDistance = 150;
+double predatorStrength = 0.01;
+bool predator = false;
+double avoidMeanGroupDistance = 200;
+//Set these to 0 to disable hunting/being afraid of mean group 0
+double avoidMeanGroupFactor = 0.0001;
+double huntFactor = 0.0001;
 
 //Predeclaration of helper functions
 void separate(std::vector<Boid> &boids, double separationDistance, double avoidFactor, double maxSpeed);
 void align(std::vector<Boid> &boids, double alignmentDistance, double alignmentFactor, double maxSpeed);
 void cohere(std::vector<Boid> &boids, double cohesionDistance, double cohesionFactor, double maxSpeed);
 void avoidBoundary(std::vector<Boid> &boids, double turnFactor, double margin);
+void drawText (SDL_Surface* screen, char* string, int size, int x, int y, int fR, int fG, int fB, int bR, int bG, int bB);
+void avoidPredator(std::vector<Boid> &boids, double predatorX, double predatorY, double avoidDistance, double strength);
+void avoidMeanGroup(std::vector<Boid> &boids, double avoidDistance, double avoidFactor);
+void hunt(std::vector<Boid> &boids, double huntFactor);
 
 int main(int argc, char* argv[]) {
     // Initialize SDL
@@ -33,8 +57,6 @@ int main(int argc, char* argv[]) {
     srand(static_cast<unsigned int>(time(nullptr)));
 
     //Gnerates boids randomly
-    int numBoids = 100;
-    double maxSpeed = 6;
     std::vector<Boid> boids = generateBoidsInCircle(numBoids, maxSpeed);
 
     // Start the game loop
@@ -47,13 +69,35 @@ int main(int argc, char* argv[]) {
             if (event.type == SDL_QUIT) {
                 quit = true;
             }
+            // If player presses the left mouse button, toggle predator mode
+            if(event.type == SDL_MOUSEBUTTONDOWN){
+                if(event.button.button == SDL_BUTTON_LEFT){
+                    predator = !predator;
+                }
+            }
         }       
-        // Clear the screen
-        SDL_SetRenderDrawColor(renderer, 181, 232, 179, 255);
-        SDL_RenderClear(renderer);
-        // Draw the boids
+        // Clear the screen + black background
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_RenderClear(renderer);
+
+    
+        // Draw the boids
         for(int i = 0; i < boids.size(); i++){
+            //Color depends on which group the boid is in
+            switch (boids[i].getGroup()){
+                case 0:
+                    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+                    break;
+                case 1:
+                    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+                    break;
+                case 2:
+                    SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
+                    break;
+                case 3:
+                    SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
+                    break;
+            }
             for(int j = boids[i].getX()-BOID_RADIUS; j < boids[i].getX()+BOID_RADIUS; j++){
                 //Drawing them as circles of radius BOID_RADIUS
                 for(int k = boids[i].getY()-BOID_RADIUS; k < boids[i].getY()+BOID_RADIUS; k++){
@@ -64,31 +108,49 @@ int main(int argc, char* argv[]) {
             }
         }
         
+       
         // Update the boids
         double dt = .1;
         for(Boid &b : boids){
             b.updatePosition(dt);
         }
 
+
         // Add repulsive force to boids which are too close
-        int separationDistance = 50;
-        double avoidFactor = 0.00008;
         separate(boids, separationDistance, avoidFactor, maxSpeed);
 
-        //Add alignment force to boids which are close
-        int alignmentDistance = 100;
-        double alignmentFactor = 0.002;
+        //Add alignment force to boids which are close   
         align(boids, alignmentDistance, alignmentFactor, maxSpeed);
 
-        //Add cohesion force to boids which are somewhat close
-        int cohesionDistance = 200;
-        double cohesionFactor = 0.0001;
+        //Add cohesion force to boids which are somewhat close     
         cohere(boids, cohesionDistance, cohesionFactor, maxSpeed);
 
-        //Add force to boids which are close to the boundary
-        double turnFactor = 0.05;
-        double margin = 0.1;
-        avoidBoundary(boids, turnFactor, margin);
+        //Add force to boids which are close to the boundary    
+        avoidBoundary(boids, turnFactor, margin);   
+
+        //Let the boid avoid the mean group 0
+        avoidMeanGroup(boids, avoidMeanGroupDistance, avoidMeanGroupFactor);
+
+        //Let mean group 0 hunt the other groups
+        hunt(boids, huntFactor);
+
+        if(predator){
+            //Get mouse position
+            int mouseX, mouseY;
+            SDL_GetMouseState(&mouseX, &mouseY);
+            //Add force to boids which are close to the mouse
+            avoidPredator(boids, mouseX, mouseY, predatorAvoidDistance, predatorStrength);
+            //Draw mean red circle around mouse
+            SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+            int predatorRadius = 10;
+            for(int i = mouseX-predatorRadius; i < mouseX+predatorRadius; i++){
+                for(int j = mouseY-predatorRadius; j < mouseY+predatorRadius; j++){
+                    if(pow(i-mouseX, 2) + pow(j-mouseY, 2) <= pow(predatorRadius, 2)){
+                        SDL_RenderDrawPoint(renderer, i, j);
+                    }
+                }
+            }
+        }
 
         // Delay and update the screen
         int simulationDelay = 0;
@@ -102,6 +164,7 @@ int main(int argc, char* argv[]) {
     // Cleanup
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
+ 
     SDL_Quit();
 
     return 0;
@@ -141,7 +204,7 @@ void align(std::vector<Boid> &boids, double alignmentDistance, double alignmentF
         double VyCorrective = 0;
         int neighbors = 0;
         for(Boid &otherBoid : boids){
-            if(&boid != &otherBoid){
+            if(&boid != &otherBoid && boid.getGroup() == otherBoid.getGroup()){
                 if(pow(boid.getX()-otherBoid.getX(), 2) + pow(boid.getY()-otherBoid.getY(), 2) <= pow(alignmentDistance, 2)){
                     //Add corrective force if other boid is close
                     VxCorrective += otherBoid.getVx();
@@ -164,7 +227,7 @@ void cohere(std::vector<Boid> &boids, double cohesionDistance, double cohesionFa
         double centerOfMassY = 0;
         int neighbors = 0;
         for(Boid &otherboid : boids){
-            if(&boid != &otherboid){
+            if(&boid != &otherboid && boid.getGroup() == otherboid.getGroup()){
                 if(pow(boid.getX()-otherboid.getX(), 2) + pow(boid.getY()-otherboid.getY(), 2) <= pow(cohesionDistance, 2)){
                     //Add corrective force if other boid is close
                     centerOfMassX += otherboid.getX();
@@ -194,6 +257,49 @@ void avoidBoundary(std::vector<Boid> &boids, double turnFactor, double margin){
         }
         if(boid.getY() > SCREEN_HEIGHT-margin*SCREEN_HEIGHT){
             boid.setVy(boid.getVy() - turnFactor);
+        }
+    }
+}
+
+void avoidPredator(std::vector<Boid> &boids, double predatorX, double predatorY, double avoidDistance, double strength){
+    for(Boid &boid : boids){
+        if(pow(boid.getX()-predatorX, 2) + pow(boid.getY()-predatorY, 2) <= pow(avoidDistance, 2)){
+            boid.setVx(boid.getVx() + strength * (boid.getX()-predatorX));
+            boid.setVy(boid.getVy() + strength * (boid.getY()-predatorY));
+        }
+    }
+}
+
+void avoidMeanGroup(std::vector<Boid> &boids, double avoidDistance, double avoidFactor){
+    for(Boid &boid : boids){
+        if(boid.getGroup() != 0){
+            for(Boid &otherBoid : boids){
+                if(otherBoid.getGroup() == 0){
+                    if(pow(boid.getX()-otherBoid.getX(), 2) + pow(boid.getY()-otherBoid.getY(), 2) <= pow(avoidDistance, 2)){
+                        boid.setVx(boid.getVx() + avoidFactor * (boid.getX()-otherBoid.getX()));
+                        boid.setVy(boid.getVy() + avoidFactor * (boid.getY()-otherBoid.getY()));
+                    }
+                }
+            }
+        }
+    }
+}
+
+void hunt(std::vector<Boid> &boids, double huntFactor){
+    //Get the mean group to the center of mass
+    double centerOfMassX = 0;
+    double centerOfMassY = 0;
+    int numBoids = boids.size();
+    for(Boid &boid : boids){
+        centerOfMassX += boid.getX();
+        centerOfMassY += boid.getY();
+    }
+    centerOfMassX /= numBoids;
+    centerOfMassY /= numBoids;
+    for(Boid &boid : boids){
+        if(boid.getGroup()==0){
+            boid.setVx(boid.getVx() + huntFactor * (centerOfMassX - boid.getX()));
+            boid.setVy(boid.getVy() + huntFactor * (centerOfMassY - boid.getY()));
         }
     }
 }

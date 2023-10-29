@@ -11,6 +11,7 @@ Boid::Boid(double x, double y, double vx, double vy){
     this->y = y;
     this->vx = vx;
     this->vy = vy;
+    this->group = rand() % 4;
 }
 
 Boid::~Boid(){
@@ -31,6 +32,10 @@ double Boid::getVx(){
 
 double Boid::getVy(){
     return this->vy;
+}
+
+int Boid::getGroup(){
+    return this->group;
 }
 
 bool Boid::inBounds(){
