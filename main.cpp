@@ -5,28 +5,18 @@
 #include <iostream>
 #include <math.h>
 #include <cmath>
-
+#include "src/param.hpp"
+#include "src/boid.hpp"
+#include "src/generateBoids.hpp"
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 960;
-const int PARTICLE_COUNT = 300;
-const int delay = 0; //in ms
-const int particleRadius = 5;
-const int PARTICLE_MASS = 3;
-const int REPULSION_THRESHOLD = 7 * particleRadius;
-const float FORCE = 50.0f;
-const float INITIAL_VELOCITY = .2;
-const bool DRAW_RAY = false;
-double RAY_LENGTH = 100;
-const double RAY_WIDTH = M_PI / 4;
+const int BOID_RADIUS = 5;
 
-struct Particle {
-    double x, y, dx, dy;
-    double angle;
-    Uint8 r, g, b;
-    Uint8 radius;
-    bool directionTendency;
-    int lastChange;
-};
+//Predeclaration of helper functions
+void separate(std::vector<Boid> &boids, double separationDistance, double avoidFactor, double maxSpeed);
+void align(std::vector<Boid> &boids, double alignmentDistance, double alignmentFactor, double maxSpeed);
+void cohere(std::vector<Boid> &boids, double cohesionDistance, double cohesionFactor, double maxSpeed);
+void avoidBoundary(std::vector<Boid> &boids, double turnFactor, double margin);
 
 int main(int argc, char* argv[]) {
     // Initialize SDL
@@ -42,28 +32,10 @@ int main(int argc, char* argv[]) {
     //Seeds the rand()
     srand(static_cast<unsigned int>(time(nullptr)));
 
-    // Generate particles
-    std::vector<Particle> particles(PARTICLE_COUNT);
-    std::default_random_engine generator;
-    std::uniform_real_distribution<float> distribution(0, 2*M_PI);
-    double xCut = 2.0*M_PI/particles.size();
-    int counter = 0;
-    for (auto& particle : particles) {
-        auto middleRad = 50;
-        particle.x = SCREEN_WIDTH/2 + 100*sin(counter*xCut);
-        particle.y = SCREEN_HEIGHT/2 + 100*cos(counter*xCut);
-        particle.radius = particleRadius;
-        double randomAngle = distribution(generator);
-        particle.angle = randomAngle;
-        particle.dx = cos(randomAngle)*INITIAL_VELOCITY;
-        particle.dy = sin(randomAngle)*INITIAL_VELOCITY;
-        particle.r = 0; 
-        particle.g = 0;
-        particle.b = 0;
-        particle.directionTendency = rand()%2;
-        particle.lastChange = 300;
-        counter++;
-    }
+    //Gnerates boids randomly
+    int numBoids = 100;
+    double maxSpeed = 6;
+    std::vector<Boid> boids = generateBoidsInCircle(numBoids, maxSpeed);
 
     // Start the game loop
     bool quit = false;
@@ -71,79 +43,59 @@ int main(int argc, char* argv[]) {
         // Handle events
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
+            // Quit if the user presses the close button 
             if (event.type == SDL_QUIT) {
                 quit = true;
             }
-        }
-
-
-
-        
-
-
-        // Update particles
-        for (auto& particle : particles) {      
-            particle.angle = std::fmod(particle.angle, 2*M_PI);
-            particle.x += cos(particle.angle)*INITIAL_VELOCITY;
-            particle.y += sin(particle.angle)*INITIAL_VELOCITY;
-            
-            enum side{
-                up, down, left, right
-            };
-
-            double radius = particle.radius;
-            double distanceLeftWall = particle.x - radius;
-            double distanceRightWall = SCREEN_WIDTH - particle.x - radius;
-            double distanceUpperWall = particle.y - radius;
-            double distanceLowerWall = SCREEN_HEIGHT - particle.y - radius;
-            double nearestDistance = std::min(distanceLeftWall,distanceRightWall,distanceUpperWall,distanceLowerWall);
-            side nearestWall;
-            if(nearestDistance == distanceLeftWall){
-                nearestWall = left;
-            }else
-            if(nearestDistance = distanceRightWall){
-                nearestWall = right;
-            }
-
-        }
-
+        }       
         // Clear the screen
         SDL_SetRenderDrawColor(renderer, 181, 232, 179, 255);
         SDL_RenderClear(renderer);
-
-
-//////////////////////////////////////////////////////////////////////////////////////////
-    // Draw particles
-        for (auto& particle : particles) {
-            SDL_SetRenderDrawColor(renderer, particle.r, particle.g, particle.b, 255);
-            SDL_RenderDrawPoint(renderer, particle.x, particle.y);
-            for(int i = -particle.radius; i < particle.radius; i++){
-                for(int j = -particle.radius; j < particle.radius; j++){
-                    if(sqrt(i*i+j*j)<particle.radius){
-                    SDL_RenderDrawPoint(renderer, particle.x+i, particle.y+j);
+        // Draw the boids
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        for(int i = 0; i < boids.size(); i++){
+            for(int j = boids[i].getX()-BOID_RADIUS; j < boids[i].getX()+BOID_RADIUS; j++){
+                //Drawing them as circles of radius BOID_RADIUS
+                for(int k = boids[i].getY()-BOID_RADIUS; k < boids[i].getY()+BOID_RADIUS; k++){
+                    if(pow(j-boids[i].getX(), 2) + pow(k-boids[i].getY(), 2) <= pow(BOID_RADIUS, 2)){
+                        SDL_RenderDrawPoint(renderer, j, k);
                     }
-                }   
+                }
             }
-
-        //Draw the rays
-         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-            if(DRAW_RAY){
-                double initialX = particle.x;
-                double initialY = particle.y;
-                double rayLength = 100 * 1/INITIAL_VELOCITY;
-                double alphaDiff = RAY_WIDTH;
-                double oldAlpha = particle.angle;
-                SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-                SDL_RenderDrawLine(renderer, initialX, initialY, initialX + rayLength * cos(oldAlpha+alphaDiff) * INITIAL_VELOCITY, initialY + rayLength * sin(oldAlpha+alphaDiff) * INITIAL_VELOCITY);
-                SDL_RenderDrawLine(renderer, initialX, initialY, initialX + rayLength * cos(oldAlpha-alphaDiff) * INITIAL_VELOCITY, initialY + rayLength * sin(oldAlpha-alphaDiff) * INITIAL_VELOCITY);
-            }            
-        
         }
         
-        SDL_Delay(delay);
-        // Update the screen
+        // Update the boids
+        double dt = .1;
+        for(Boid &b : boids){
+            b.updatePosition(dt);
+        }
+
+        // Add repulsive force to boids which are too close
+        int separationDistance = 50;
+        double avoidFactor = 0.00008;
+        separate(boids, separationDistance, avoidFactor, maxSpeed);
+
+        //Add alignment force to boids which are close
+        int alignmentDistance = 100;
+        double alignmentFactor = 0.002;
+        align(boids, alignmentDistance, alignmentFactor, maxSpeed);
+
+        //Add cohesion force to boids which are somewhat close
+        int cohesionDistance = 200;
+        double cohesionFactor = 0.0001;
+        cohere(boids, cohesionDistance, cohesionFactor, maxSpeed);
+
+        //Add force to boids which are close to the boundary
+        double turnFactor = 0.05;
+        double margin = 0.1;
+        avoidBoundary(boids, turnFactor, margin);
+
+        // Delay and update the screen
+        int simulationDelay = 0;
+        SDL_Delay(simulationDelay);
         SDL_RenderPresent(renderer);
     }
+    
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -153,4 +105,95 @@ int main(int argc, char* argv[]) {
     SDL_Quit();
 
     return 0;
+}
+
+
+//Helper functions
+void separate(std::vector<Boid> &boids, double separationDistance, double avoidFactor, double maxSpeed){
+   for(Boid &boid : boids){
+    double dxCorrective = 0;
+    double dyCorrective = 0;
+    //Every boid which is too close to our boid contributes to the corrective force
+    for(Boid &otherBoid : boids){
+        if(&boid != &otherBoid){
+            if(pow(boid.getX()-otherBoid.getX(), 2) + pow(boid.getY()-otherBoid.getY(), 2) <= pow(separationDistance, 2)){
+                dxCorrective += boid.getX()-otherBoid.getX();
+                dyCorrective += boid.getY()-otherBoid.getY();
+            }
+        }
+    }
+    //Now the boids velocity is updatet with the corrective force and some avoidness-factor
+    boid.setVx(boid.getVx() + avoidFactor * dxCorrective);
+    boid.setVy(boid.getVy() + avoidFactor * dyCorrective);
+
+    //We also want to make sure that the boids don't exceed the maximum speed
+    double speed = sqrt(pow(boid.getVx(), 2) + pow(boid.getVy(), 2));
+    if(speed > maxSpeed){
+        boid.setVx(boid.getVx() * maxSpeed/speed);
+        boid.setVy(boid.getVy() * maxSpeed/speed);
+    }
+   }
+}
+
+void align(std::vector<Boid> &boids, double alignmentDistance, double alignmentFactor, double maxSpeed){
+    for(Boid &boid : boids){
+        double VxCorrective = 0;
+        double VyCorrective = 0;
+        int neighbors = 0;
+        for(Boid &otherBoid : boids){
+            if(&boid != &otherBoid){
+                if(pow(boid.getX()-otherBoid.getX(), 2) + pow(boid.getY()-otherBoid.getY(), 2) <= pow(alignmentDistance, 2)){
+                    //Add corrective force if other boid is close
+                    VxCorrective += otherBoid.getVx();
+                    VyCorrective += otherBoid.getVy();
+                    neighbors++;
+                }
+            }
+        }
+        //Now the boids velocity is updatet with the corrective force and some avoidness-factor
+        if(neighbors > 0){
+            boid.setVx(boid.getVx() + alignmentFactor * VxCorrective/neighbors);
+            boid.setVy(boid.getVy() + alignmentFactor * VyCorrective/neighbors);
+        }
+    }
+}
+
+void cohere(std::vector<Boid> &boids, double cohesionDistance, double cohesionFactor, double maxSpeed){
+    for(Boid &boid : boids){
+        double centerOfMassX = 0;
+        double centerOfMassY = 0;
+        int neighbors = 0;
+        for(Boid &otherboid : boids){
+            if(&boid != &otherboid){
+                if(pow(boid.getX()-otherboid.getX(), 2) + pow(boid.getY()-otherboid.getY(), 2) <= pow(cohesionDistance, 2)){
+                    //Add corrective force if other boid is close
+                    centerOfMassX += otherboid.getX();
+                    centerOfMassY += otherboid.getY();
+                    neighbors++;
+                }
+            }
+        }
+        //Now we update the boids velocity to move a bit towards the center of mass
+        if(neighbors > 0){
+            boid.setVx(boid.getVx() + cohesionFactor * (centerOfMassX/neighbors - boid.getX()));
+            boid.setVy(boid.getVy() + cohesionFactor * (centerOfMassY/neighbors - boid.getY()));
+        }
+    }
+}
+
+void avoidBoundary(std::vector<Boid> &boids, double turnFactor, double margin){
+    for(Boid &boid : boids){
+        if(boid.getX() < margin*SCREEN_WIDTH){
+            boid.setVx(boid.getVx() + turnFactor);
+        }
+        if(boid.getX() > SCREEN_WIDTH-margin*SCREEN_WIDTH){
+            boid.setVx(boid.getVx() - turnFactor);
+        }
+        if(boid.getY() < margin*SCREEN_HEIGHT){
+            boid.setVy(boid.getVy() + turnFactor);
+        }
+        if(boid.getY() > SCREEN_HEIGHT-margin*SCREEN_HEIGHT){
+            boid.setVy(boid.getVy() - turnFactor);
+        }
+    }
 }
