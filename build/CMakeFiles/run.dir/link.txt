@@ -1,1 +1,1 @@
-/usr/bin/c++  -std=c++11 -O3 CMakeFiles/run.dir/main.cpp.o CMakeFiles/run.dir/src/boid.cpp.o CMakeFiles/run.dir/src/generateBoids.cpp.o -o run  /usr/lib/x86_64-linux-gnu/libSDL2.so -lSDL2_ttf 
+/usr/bin/c++  -std=c++11 -O3 CMakeFiles/run.dir/main.cpp.o CMakeFiles/run.dir/src/boid.cpp.o CMakeFiles/run.dir/src/generateBoids.cpp.o -o run  /usr/lib/x86_64-linux-gnu/libSDL2.so 

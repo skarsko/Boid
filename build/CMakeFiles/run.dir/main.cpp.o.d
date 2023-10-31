@@ -301,7 +301,13 @@ CMakeFiles/run.dir/main.cpp.o: \
  /usr/include/c++/13/bits/basic_ios.tcc \
  /usr/include/c++/13/bits/ostream.tcc /usr/include/c++/13/istream \
  /usr/include/c++/13/bits/istream.tcc /usr/include/SDL2/SDL_ttf.h \
- /usr/include/SDL2/SDL.h \
+ /usr/include/SDL2/SDL.h /usr/include/c++/13/chrono \
+ /usr/include/c++/13/bits/chrono.h /usr/include/c++/13/ratio \
+ /usr/include/c++/13/bits/parse_numbers.h /usr/include/c++/13/algorithm \
+ /usr/include/c++/13/bits/stl_algo.h \
+ /usr/include/c++/13/bits/algorithmfwd.h \
+ /usr/include/c++/13/bits/stl_heap.h \
+ /usr/include/c++/13/bits/stl_tempbuf.h \
  /home/samuelkarsko/Desktop/Own\ Programming/Boid/src/param.hpp \
  /home/samuelkarsko/Desktop/Own\ Programming/Boid/src/boid.hpp \
  /home/samuelkarsko/Desktop/Own\ Programming/Boid/src/generateBoids.hpp \

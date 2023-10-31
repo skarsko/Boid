@@ -6,6 +6,8 @@
 #include <math.h>
 #include <cmath>
 #include <SDL2/SDL_ttf.h>
+#include <chrono>
+#include <algorithm>
 #include "src/param.hpp"
 #include "src/boid.hpp"
 #include "src/generateBoids.hpp"
@@ -27,9 +29,9 @@ double margin = 0.1;
 double predatorAvoidDistance = 150;
 double predatorStrength = 0.01;
 bool predator = false;
-double avoidMeanGroupDistance = 200;
+double avoidMeanGroupDistance = 400;
 //Set these to 0 to disable hunting/being afraid of mean group 0
-double avoidMeanGroupFactor = 0.0001;
+double avoidMeanGroupFactor = 0.0000005;
 double huntFactor = 0.0001;
 
 //Predeclaration of helper functions
@@ -42,10 +44,12 @@ void avoidPredator(std::vector<Boid> &boids, double predatorX, double predatorY,
 void avoidMeanGroup(std::vector<Boid> &boids, double avoidDistance, double avoidFactor);
 void hunt(std::vector<Boid> &boids, double huntFactor);
 
+
+
+
 int main(int argc, char* argv[]) {
     // Initialize SDL
     SDL_Init(SDL_INIT_VIDEO);
-
 
     // Create a window
     SDL_Window* window = SDL_CreateWindow("Particle Animation", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
@@ -57,7 +61,7 @@ int main(int argc, char* argv[]) {
     srand(static_cast<unsigned int>(time(nullptr)));
 
     //Gnerates boids randomly
-    std::vector<Boid> boids = generateBoidsInCircle(numBoids, maxSpeed);
+    std::vector<Boid> boids = generateBoidsRandomly(numBoids, maxSpeed);
 
     // Start the game loop
     bool quit = false;
@@ -86,7 +90,7 @@ int main(int argc, char* argv[]) {
             //Color depends on which group the boid is in
             switch (boids[i].getGroup()){
                 case 0:
-                    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+                    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); //mean group (red)
                     break;
                 case 1:
                     SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
@@ -97,15 +101,29 @@ int main(int argc, char* argv[]) {
                 case 3:
                     SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
                     break;
+                default: 
+                    throw std::invalid_argument("Invalid group number");
             }
-            for(int j = boids[i].getX()-BOID_RADIUS; j < boids[i].getX()+BOID_RADIUS; j++){
-                //Drawing them as circles of radius BOID_RADIUS
+
+            //Draw the Boids with two lines like birds
+            double angle = atan2(boids[i].getVy(), boids[i].getVx());
+            int x1 = boids[i].getX() + BOID_RADIUS * cos(angle);
+            int y1 = boids[i].getY() + BOID_RADIUS * sin(angle);
+            int x2 = boids[i].getX() + BOID_RADIUS * cos(angle + 2.35619);
+            int y2 = boids[i].getY() + BOID_RADIUS * sin(angle + 2.35619);
+            int x3 = boids[i].getX() + BOID_RADIUS * cos(angle - 2.35619);
+            int y3 = boids[i].getY() + BOID_RADIUS * sin(angle - 2.35619);
+            SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
+            SDL_RenderDrawLine(renderer, x1, y1, x3, y3);
+
+            //Drawing them as circles of radius BOID_RADIUS
+            /*for(int j = boids[i].getX()-BOID_RADIUS; j < boids[i].getX()+BOID_RADIUS; j++){          
                 for(int k = boids[i].getY()-BOID_RADIUS; k < boids[i].getY()+BOID_RADIUS; k++){
                     if(pow(j-boids[i].getX(), 2) + pow(k-boids[i].getY(), 2) <= pow(BOID_RADIUS, 2)){
                         SDL_RenderDrawPoint(renderer, j, k);
                     }
                 }
-            }
+            }*/
         }
         
        
@@ -114,7 +132,7 @@ int main(int argc, char* argv[]) {
         for(Boid &b : boids){
             b.updatePosition(dt);
         }
-
+        
 
         // Add repulsive force to boids which are too close
         separate(boids, separationDistance, avoidFactor, maxSpeed);
@@ -151,6 +169,8 @@ int main(int argc, char* argv[]) {
                 }
             }
         }
+
+      
 
         // Delay and update the screen
         int simulationDelay = 0;
@@ -263,9 +283,9 @@ void avoidBoundary(std::vector<Boid> &boids, double turnFactor, double margin){
 
 void avoidPredator(std::vector<Boid> &boids, double predatorX, double predatorY, double avoidDistance, double strength){
     for(Boid &boid : boids){
-        if(pow(boid.getX()-predatorX, 2) + pow(boid.getY()-predatorY, 2) <= pow(avoidDistance, 2)){
+        if(boid.getGroup() != 0 && pow(boid.getX()-predatorX, 2) + pow(boid.getY()-predatorY, 2) <= pow(avoidDistance, 2)){
             boid.setVx(boid.getVx() + strength * (boid.getX()-predatorX));
-            boid.setVy(boid.getVy() + strength * (boid.getY()-predatorY));
+            boid.setVy(boid.getVy() + strength * (boid.getY()-predatorY));  
         }
     }
 }
@@ -275,7 +295,8 @@ void avoidMeanGroup(std::vector<Boid> &boids, double avoidDistance, double avoid
         if(boid.getGroup() != 0){
             for(Boid &otherBoid : boids){
                 if(otherBoid.getGroup() == 0){
-                    if(pow(boid.getX()-otherBoid.getX(), 2) + pow(boid.getY()-otherBoid.getY(), 2) <= pow(avoidDistance, 2)){
+                    double distance = pow(boid.getX()-otherBoid.getX(), 2) + pow(boid.getY()-otherBoid.getY(), 2);
+                    if(distance <= pow(avoidDistance, 2)){
                         boid.setVx(boid.getVx() + avoidFactor * (boid.getX()-otherBoid.getX()));
                         boid.setVy(boid.getVy() + avoidFactor * (boid.getY()-otherBoid.getY()));
                     }

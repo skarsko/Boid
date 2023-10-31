@@ -59,7 +59,9 @@ CMakeFiles/run.dir/main.cpp.o: /home/samuelkarsko/Desktop/Own\ Programming/Boid/
   /usr/include/alloca.h \
   /usr/include/asm-generic/errno-base.h \
   /usr/include/asm-generic/errno.h \
+  /usr/include/c++/13/algorithm \
   /usr/include/c++/13/backward/binders.h \
+  /usr/include/c++/13/bits/algorithmfwd.h \
   /usr/include/c++/13/bits/alloc_traits.h \
   /usr/include/c++/13/bits/allocator.h \
   /usr/include/c++/13/bits/basic_ios.h \
@@ -68,6 +70,7 @@ CMakeFiles/run.dir/main.cpp.o: /home/samuelkarsko/Desktop/Own\ Programming/Boid/
   /usr/include/c++/13/bits/basic_string.tcc \
   /usr/include/c++/13/bits/char_traits.h \
   /usr/include/c++/13/bits/charconv.h \
+  /usr/include/c++/13/bits/chrono.h \
   /usr/include/c++/13/bits/concept_check.h \
   /usr/include/c++/13/bits/cpp_type_traits.h \
   /usr/include/c++/13/bits/cxxabi_forced.h \
@@ -92,6 +95,7 @@ CMakeFiles/run.dir/main.cpp.o: /home/samuelkarsko/Desktop/Own\ Programming/Boid/
   /usr/include/c++/13/bits/new_allocator.h \
   /usr/include/c++/13/bits/ostream.tcc \
   /usr/include/c++/13/bits/ostream_insert.h \
+  /usr/include/c++/13/bits/parse_numbers.h \
   /usr/include/c++/13/bits/postypes.h \
   /usr/include/c++/13/bits/predefined_ops.h \
   /usr/include/c++/13/bits/ptr_traits.h \
@@ -101,15 +105,18 @@ CMakeFiles/run.dir/main.cpp.o: /home/samuelkarsko/Desktop/Own\ Programming/Boid/
   /usr/include/c++/13/bits/refwrap.h \
   /usr/include/c++/13/bits/requires_hosted.h \
   /usr/include/c++/13/bits/std_abs.h \
+  /usr/include/c++/13/bits/stl_algo.h \
   /usr/include/c++/13/bits/stl_algobase.h \
   /usr/include/c++/13/bits/stl_bvector.h \
   /usr/include/c++/13/bits/stl_construct.h \
   /usr/include/c++/13/bits/stl_function.h \
+  /usr/include/c++/13/bits/stl_heap.h \
   /usr/include/c++/13/bits/stl_iterator.h \
   /usr/include/c++/13/bits/stl_iterator_base_funcs.h \
   /usr/include/c++/13/bits/stl_iterator_base_types.h \
   /usr/include/c++/13/bits/stl_numeric.h \
   /usr/include/c++/13/bits/stl_pair.h \
+  /usr/include/c++/13/bits/stl_tempbuf.h \
   /usr/include/c++/13/bits/stl_uninitialized.h \
   /usr/include/c++/13/bits/stl_vector.h \
   /usr/include/c++/13/bits/streambuf.tcc \
@@ -120,6 +127,7 @@ CMakeFiles/run.dir/main.cpp.o: /home/samuelkarsko/Desktop/Own\ Programming/Boid/
   /usr/include/c++/13/bits/vector.tcc \
   /usr/include/c++/13/cctype \
   /usr/include/c++/13/cerrno \
+  /usr/include/c++/13/chrono \
   /usr/include/c++/13/clocale \
   /usr/include/c++/13/cmath \
   /usr/include/c++/13/cstdint \
@@ -147,6 +155,7 @@ CMakeFiles/run.dir/main.cpp.o: /home/samuelkarsko/Desktop/Own\ Programming/Boid/
   /usr/include/c++/13/numeric \
   /usr/include/c++/13/ostream \
   /usr/include/c++/13/random \
+  /usr/include/c++/13/ratio \
   /usr/include/c++/13/stdexcept \
   /usr/include/c++/13/stdlib.h \
   /usr/include/c++/13/streambuf \
@@ -777,8 +786,6 @@ CMakeFiles/run.dir/src/generateBoids.cpp.o: /home/samuelkarsko/Desktop/Own\ Prog
 
 /usr/lib/gcc/x86_64-linux-gnu/13/include/mwaitxintrin.h:
 
-/usr/lib/gcc/x86_64-linux-gnu/13/include/mmintrin.h:
-
 /usr/lib/gcc/x86_64-linux-gnu/13/include/mm_malloc.h:
 
 /usr/lib/gcc/x86_64-linux-gnu/13/include/lzcntintrin.h:
@@ -885,9 +892,17 @@ CMakeFiles/run.dir/src/generateBoids.cpp.o: /home/samuelkarsko/Desktop/Own\ Prog
 
 /usr/include/x86_64-linux-gnu/c++/13/bits/c++allocator.h:
 
-/usr/include/c++/13/cstdlib:
+/usr/include/x86_64-linux-gnu/c++/13/bits/atomic_word.h:
 
-/usr/include/c++/13/cstdio:
+/usr/include/x86_64-linux-gnu/bits/wordsize.h:
+
+/usr/include/x86_64-linux-gnu/bits/wctype-wchar.h:
+
+/usr/include/x86_64-linux-gnu/bits/wchar2-decl.h:
+
+/usr/include/x86_64-linux-gnu/bits/wchar.h:
+
+/usr/include/x86_64-linux-gnu/bits/waitflags.h:
 
 /usr/include/c++/13/cerrno:
 
@@ -913,6 +928,12 @@ CMakeFiles/run.dir/src/generateBoids.cpp.o: /home/samuelkarsko/Desktop/Own\ Prog
 
 /usr/include/c++/13/bits/allocator.h:
 
+/usr/include/c++/13/chrono:
+
+/usr/include/c++/13/bits/stl_algo.h:
+
+/home/samuelkarsko/Desktop/Own\ Programming/Boid/main.cpp:
+
 /usr/include/c++/13/bits/locale_facets.tcc:
 
 /usr/include/c++/13/bits/refwrap.h:
@@ -926,6 +947,8 @@ CMakeFiles/run.dir/src/generateBoids.cpp.o: /home/samuelkarsko/Desktop/Own\ Prog
 /usr/include/c++/13/bits/stl_vector.h:
 
 /usr/include/SDL2/SDL_error.h:
+
+/usr/include/c++/13/bits/stl_tempbuf.h:
 
 /usr/lib/gcc/x86_64-linux-gnu/13/include/avxintrin.h:
 
@@ -942,6 +965,8 @@ CMakeFiles/run.dir/src/generateBoids.cpp.o: /home/samuelkarsko/Desktop/Own\ Prog
 /usr/include/c++/13/iosfwd:
 
 /usr/include/x86_64-linux-gnu/bits/mathcalls-narrow.h:
+
+/usr/include/c++/13/bits/stl_heap.h:
 
 /usr/include/c++/13/bits/ostream_insert.h:
 
@@ -968,6 +993,8 @@ CMakeFiles/run.dir/src/generateBoids.cpp.o: /home/samuelkarsko/Desktop/Own\ Prog
 /usr/include/c++/13/bits/exception_ptr.h:
 
 /usr/include/c++/13/bits/istream.tcc:
+
+/usr/include/c++/13/cstdio:
 
 /usr/include/c++/13/bits/exception.h:
 
@@ -1001,8 +1028,6 @@ CMakeFiles/run.dir/src/generateBoids.cpp.o: /home/samuelkarsko/Desktop/Own\ Prog
 
 /usr/include/c++/13/bits/basic_string.h:
 
-/usr/include/x86_64-linux-gnu/bits/endianness.h:
-
 /usr/include/c++/13/bits/nested_exception.h:
 
 /usr/include/c++/13/bits/basic_ios.tcc:
@@ -1016,6 +1041,12 @@ CMakeFiles/run.dir/src/generateBoids.cpp.o: /home/samuelkarsko/Desktop/Own\ Prog
 /usr/include/c++/13/bits/uniform_int_dist.h:
 
 /usr/include/c++/13/bits/locale_classes.tcc:
+
+/usr/include/x86_64-linux-gnu/bits/wchar2.h:
+
+/usr/include/x86_64-linux-gnu/bits/fp-logb.h:
+
+/usr/include/c++/13/backward/binders.h:
 
 /usr/include/SDL2/SDL_log.h:
 
@@ -1031,7 +1062,15 @@ CMakeFiles/run.dir/src/generateBoids.cpp.o: /home/samuelkarsko/Desktop/Own\ Prog
 
 /usr/include/x86_64-linux-gnu/bits/atomic_wide_counter.h:
 
+/usr/include/x86_64-linux-gnu/bits/endianness.h:
+
+/usr/include/c++/13/bits/chrono.h:
+
 /usr/include/SDL2/SDL_power.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/13/include/mmintrin.h:
+
+/usr/include/c++/13/algorithm:
 
 /usr/include/x86_64-linux-gnu/bits/thread-shared-types.h:
 
@@ -1050,8 +1089,6 @@ CMakeFiles/run.dir/src/generateBoids.cpp.o: /home/samuelkarsko/Desktop/Own\ Prog
 /usr/lib/gcc/x86_64-linux-gnu/13/include/rdseedintrin.h:
 
 /usr/include/SDL2/SDL_config.h:
-
-/usr/include/c++/13/ctime:
 
 /usr/include/c++/13/bits/stl_numeric.h:
 
@@ -1075,10 +1112,6 @@ CMakeFiles/run.dir/src/generateBoids.cpp.o: /home/samuelkarsko/Desktop/Own\ Prog
 
 /usr/include/c++/13/bits/hash_bytes.h:
 
-/usr/include/c++/13/cstdint:
-
-/usr/include/SDL2/SDL_mutex.h:
-
 /usr/include/x86_64-linux-gnu/bits/math-vector.h:
 
 /usr/lib/gcc/x86_64-linux-gnu/13/include/serializeintrin.h:
@@ -1098,6 +1131,12 @@ CMakeFiles/run.dir/src/generateBoids.cpp.o: /home/samuelkarsko/Desktop/Own\ Prog
 /home/samuelkarsko/Desktop/Own\ Programming/Boid/src/param.hpp:
 
 /usr/include/SDL2/SDL_haptic.h:
+
+/usr/include/x86_64-linux-gnu/bits/types/struct___jmp_buf_tag.h:
+
+/usr/include/x86_64-linux-gnu/bits/stdlib-bsearch.h:
+
+/usr/include/x86_64-linux-gnu/bits/types/clockid_t.h:
 
 /usr/include/SDL2/SDL_locale.h:
 
@@ -1143,6 +1182,8 @@ CMakeFiles/run.dir/src/generateBoids.cpp.o: /home/samuelkarsko/Desktop/Own\ Prog
 
 /usr/include/c++/13/bits/std_abs.h:
 
+/usr/include/c++/13/bits/parse_numbers.h:
+
 /usr/include/SDL2/SDL_misc.h:
 
 /usr/include/SDL2/SDL_assert.h:
@@ -1162,6 +1203,8 @@ CMakeFiles/run.dir/src/generateBoids.cpp.o: /home/samuelkarsko/Desktop/Own\ Prog
 /usr/include/c++/13/bits/stl_uninitialized.h:
 
 /usr/include/c++/13/bits/new_allocator.h:
+
+/usr/include/c++/13/bits/algorithmfwd.h:
 
 /usr/include/x86_64-linux-gnu/bits/long-double.h:
 
@@ -1183,8 +1226,6 @@ CMakeFiles/run.dir/src/generateBoids.cpp.o: /home/samuelkarsko/Desktop/Own\ Prog
 
 /usr/include/x86_64-linux-gnu/bits/types/timer_t.h:
 
-/usr/include/c++/13/clocale:
-
 /usr/include/SDL2/SDL_blendmode.h:
 
 /usr/include/c++/13/bits/requires_hosted.h:
@@ -1204,6 +1245,12 @@ CMakeFiles/run.dir/src/generateBoids.cpp.o: /home/samuelkarsko/Desktop/Own\ Prog
 /usr/include/c++/13/bits/vector.tcc:
 
 /usr/include/SDL2/SDL_rwops.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/13/include/avx512bwintrin.h:
+
+/usr/include/x86_64-linux-gnu/bits/waitstatus.h:
+
+/usr/include/c++/13/bits/exception_defines.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/__FILE.h:
 
@@ -1229,19 +1276,11 @@ CMakeFiles/run.dir/src/generateBoids.cpp.o: /home/samuelkarsko/Desktop/Own\ Prog
 
 /usr/include/c++/13/initializer_list:
 
-/usr/include/x86_64-linux-gnu/bits/wchar2-decl.h:
-
 /usr/lib/gcc/x86_64-linux-gnu/13/include/avx512fintrin.h:
 
 /usr/include/x86_64-linux-gnu/bits/uintn-identity.h:
 
 /usr/include/SDL2/SDL_timer.h:
-
-/usr/include/SDL2/begin_code.h:
-
-/usr/include/c++/13/cwctype:
-
-/usr/include/SDL2/SDL_version.h:
 
 /usr/include/x86_64-linux-gnu/bits/typesizes.h:
 
@@ -1255,13 +1294,27 @@ CMakeFiles/run.dir/src/generateBoids.cpp.o: /home/samuelkarsko/Desktop/Own\ Prog
 
 /usr/include/alloca.h:
 
+/usr/include/c++/13/clocale:
+
+/usr/include/SDL2/SDL_mutex.h:
+
+/usr/include/c++/13/cstdint:
+
+/usr/include/c++/13/cstdlib:
+
+/usr/include/c++/13/ctime:
+
 /usr/include/x86_64-linux-gnu/sys/select.h:
 
 /usr/include/c++/13/cwchar:
 
-/home/samuelkarsko/Desktop/Own\ Programming/Boid/main.cpp:
+/usr/include/SDL2/begin_code.h:
 
-/usr/include/c++/13/backward/binders.h:
+/usr/include/SDL2/SDL_version.h:
+
+/usr/include/c++/13/cwctype:
+
+/usr/include/c++/13/ratio:
 
 /usr/include/c++/13/debug/assertions.h:
 
@@ -1395,10 +1448,6 @@ CMakeFiles/run.dir/src/generateBoids.cpp.o: /home/samuelkarsko/Desktop/Own\ Prog
 
 /usr/include/x86_64-linux-gnu/bits/fp-fast.h:
 
-/usr/include/x86_64-linux-gnu/bits/wchar2.h:
-
-/usr/include/x86_64-linux-gnu/bits/fp-logb.h:
-
 /usr/include/x86_64-linux-gnu/bits/iscanonical.h:
 
 /usr/include/x86_64-linux-gnu/bits/locale.h:
@@ -1455,17 +1504,7 @@ CMakeFiles/run.dir/src/generateBoids.cpp.o: /home/samuelkarsko/Desktop/Own\ Prog
 
 /usr/include/x86_64-linux-gnu/bits/types/cookie_io_functions_t.h:
 
-/usr/include/x86_64-linux-gnu/bits/wchar.h:
-
 /usr/include/x86_64-linux-gnu/bits/types/locale_t.h:
-
-/usr/include/x86_64-linux-gnu/bits/wctype-wchar.h:
-
-/usr/include/x86_64-linux-gnu/bits/stdlib-bsearch.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/clockid_t.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/struct___jmp_buf_tag.h:
 
 /usr/include/asm-generic/errno.h:
 
@@ -1474,15 +1513,3 @@ CMakeFiles/run.dir/src/generateBoids.cpp.o: /home/samuelkarsko/Desktop/Own\ Prog
 /usr/include/c++/13/ext/atomicity.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/struct_tm.h:
-
-/usr/include/x86_64-linux-gnu/bits/waitflags.h:
-
-/usr/lib/gcc/x86_64-linux-gnu/13/include/avx512bwintrin.h:
-
-/usr/include/c++/13/bits/exception_defines.h:
-
-/usr/include/x86_64-linux-gnu/bits/waitstatus.h:
-
-/usr/include/x86_64-linux-gnu/bits/wordsize.h:
-
-/usr/include/x86_64-linux-gnu/c++/13/bits/atomic_word.h:
