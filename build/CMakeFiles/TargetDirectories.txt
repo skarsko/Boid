@@ -1,3 +1,0 @@
-/home/samuelkarsko/Desktop/Own Programming/Boid/build/CMakeFiles/run.dir
-/home/samuelkarsko/Desktop/Own Programming/Boid/build/CMakeFiles/edit_cache.dir
-/home/samuelkarsko/Desktop/Own Programming/Boid/build/CMakeFiles/rebuild_cache.dir
